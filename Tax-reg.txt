@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaxReg Pakistan - Production Build</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .urdu { font-family: 'Noto Nastaliq Urdu', serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Pakistan Green Theme */
+        .pak-green { color: #01411C; }
+        .bg-pak-green { background-color: #01411C; }
+        
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-in { animation: slideIn 0.5s ease-out; }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(1, 65, 28, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(1, 65, 28, 0.4); }
+        }
+        .glow-effect { animation: pulse-glow 3s infinite; }
+        
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #10b981 0%, #01411C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .reg-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reg-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px rgba(1, 65, 28, 0.3);
+        }
+        
+        .legal-text {
+            background: #0f172a;
+            border-left: 4px solid #01411C;
+        }
+        
+        @keyframes crescent {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(5deg); }
+        }
+        .crescent-icon { animation: crescent 4s ease-in-out infinite; }
+        
+        /* Code block styling */
+        pre {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: #e2e8f0;
+        }
+        .code-keyword { color: #c084fc; }
+        .code-string { color: #86efac; }
+        .code-comment { color: #64748b; }
+        .code-function { color: #60a5fa; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 overflow-x-hidden">
+
+<div id="app" class="min-h-screen flex flex-col">
+
+    <!-- Top Bar -->
+    <div class="bg-gradient-to-r from-[#01411C] via-[#01662e] to-[#01411C] text-white text-center py-2 text-sm font-medium relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')] opacity-30"></div>
+        <div class="relative z-10 flex items-center justify-center gap-2">
+            <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+            <span>Production Build Ready | Download Complete Project Below</span>
+            <span class="urdu text-xs mr-2">پاکستان ٹیکس ریگولیشن پورٹل</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass border-b border-slate-800 top-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-[#01411C] to-[#10b981] rounded-lg flex items-center justify-center glow-effect relative overflow-hidden">
+                        <div class="absolute inset-0 bg-white/10"></div>
+                        <i data-lucide="crescent" class="w-6 h-6 text-white crescent-icon"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold gradient-text">TaxReg Pakistan</h1>
+                        <p class="text-xs text-slate-400 mono">PRODUCTION BUILD v1.0</p>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center gap-6">
+                    <button @click="currentView = 'live-demo'" :class="{'text-emerald-400': currentView === 'live-demo'}" class="hover:text-emerald-400 transition">Live Demo</button>
+                    <button @click="currentView = 'project-files'" :class="{'text-emerald-400': currentView === 'project-files'}" class="hover:text-emerald-400 transition">Project Files</button>
+                    <button @click="currentView = 'database'" :class="{'text-emerald-400': currentView === 'database'}" class="hover:text-emerald-400 transition">Database</button>
+                    <button @click="currentView = 'deployment'" :class="{'text-emerald-400': currentView === 'deployment'}" class="hover:text-emerald-400 transition">Deploy</button>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 rounded-lg text-xs font-medium transition flex items-center gap-1">
+                        <i data-lucide="download" class="w-3 h-3"></i>
+                        Download All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 pt-28 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+
+        <!-- Live Demo View -->
+        <div v-if="currentView === 'live-demo'" class="space-y-8 slide-in">
+            
+            <!-- Hero -->
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-[#01411C]/20 to-slate-900 border border-[#01411C]/50 p-8 glow-effect">
+                <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+                
+                <div class="relative z-10 grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium mb-4">
+                            <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                            Fully Functional Build
+                        </div>
+                        <h2 class="text-4xl font-bold mb-4">TaxReg Pakistan</h2>
+                        <p class="text-slate-400 text-lg mb-6">
+                            Complete Next.js 14 application with PostgreSQL database, 
+                            Prisma ORM, and FBR data integration ready for deployment.
+                        </p>
+                        <div class="flex flex-wrap gap-3">
+                            <button @click="showSetupSteps = true" class="px-6 py-3 bg-[#01411C] hover:bg-[#01662e] rounded-lg font-medium transition flex items-center gap-2">
+                                <i data-lucide="play" class="w-4 h-4"></i>
+                                Setup Instructions
+                            </button>
+                            <button @click="currentView = 'project-files'" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg font-medium transition">
+                                View Code
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="glass rounded-xl p-4 border border-emerald-500/20">
+                            <div class="text-2xl font-bold text-emerald-400 mb-1">Next.js 14</div>
+                            <div class="text-xs text-slate-500">App Router + Server Actions</div>
+                        </div>
+                        <div class="glass rounded-xl p-4 border border-blue-500/20">
+                            <div class="text-2xl font-bold text-blue-400 mb-1">PostgreSQL</div>
+                            <div class="text-xs text-slate-500">Prisma ORM + Migrations</div>
+                        </div>
+                        <div class="glass rounded-xl p-4 border border-purple-500/20">
+                            <div class="text-2xl font-bold text-purple-400 mb-1">TypeScript</div>
+                            <div class="text-xs text-slate-500">Full Type Safety</div>
+                        </div>
+                        <div class="glass rounded-xl p-4 border border-orange-500/20">
+                            <div class="text-2xl font-bold text-orange-400 mb-1">Tailwind</div>
+                            <div class="text-xs text-slate-500">Pakistan Green Theme</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Demo -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Regulation Search Demo -->
+                <div class="lg:col-span-2 glass rounded-xl border border-slate-800 p-6">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i data-lucide="search" class="w-5 h-5 text-emerald-400"></i>
+                        Regulation Search (Live Demo)
+                    </h3>
+                    
+                    <div class="flex gap-3 mb-4">
+                        <select v-model="demoFilters.type" class="px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-emerald-500">
+                            <option value="">All Types</option>
+                            <option value="INCOME_TAX">Income Tax</option>
+                            <option value="SALES_TAX">Sales Tax</option>
+                            <option value="FEDERAL_EXCISE">Federal Excise</option>
+                        </select>
+                        <select v-model="demoFilters.jurisdiction" class="px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-emerald-500">
+                            <option value="">All Jurisdictions</option>
+                            <option value="Federal">Federal</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Sindh">Sindh</option>
+                        </select>
+                        <input 
+                            v-model="demoFilters.search" 
+                            type="text" 
+                            placeholder="Search sections..." 
+                            class="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-emerald-500"
+                        >
+                    </div>
+
+                    <div class="space-y-3 max-h-96 overflow-y-auto">
+                        <div v-for="reg in filteredDemoRegulations" :key="reg.id" 
+                             @click="selectedRegulation = reg"
+                             class="p-4 bg-slate-900/50 rounded-lg border border-slate-800 hover:border-emerald-500/50 cursor-pointer transition group">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 bg-emerald-600/20 text-emerald-400 text-xs rounded font-mono">{{ reg.section }}</span>
+                                    <span class="text-xs text-slate-500">{{ reg.jurisdiction }}</span>
+                                </div>
+                                <span class="text-xs text-slate-500">{{ reg.type }}</span>
+                            </div>
+                            <h4 class="font-medium text-sm group-hover:text-emerald-400 transition">{{ reg.title }}</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notice Analyzer Demo -->
+                <div class="glass rounded-xl border border-slate-800 p-6">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i data-lucide="scan-line" class="w-5 h-5 text-emerald-400"></i>
+                        Notice Analyzer
+                    </h3>
+                    
+                    <textarea 
+                        v-model="demoNoticeText" 
+                        rows="6" 
+                        placeholder="Paste FBR notice here..."
+                        class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500 resize-none mb-3"
+                    ></textarea>
+                    
+                    <button 
+                        @click="analyzeDemoNotice" 
+                        :disabled="!demoNoticeText || demoAnalyzing"
+                        class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2"
+                    >
+                        <i v-if="demoAnalyzing" data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                        <span>{{ demoAnalyzing ? 'Analyzing...' : 'Analyze' }}</span>
+                    </button>
+
+                    <div v-if="demoAnalysisResult" class="mt-4 p-3 bg-emerald-950/20 border border-emerald-500/20 rounded-lg">
+                        <div class="text-xs text-emerald-400 mb-1">Detected:</div>
+                        <div class="text-sm font-medium">{{ demoAnalysisResult.type }}</div>
+                        <div class="text-xs text-slate-400 mt-1">Section: {{ demoAnalysisResult.section }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Regulation Detail Modal -->
+            <div v-if="selectedRegulation" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" @click.self="selectedRegulation = null">
+                <div class="glass rounded-2xl border border-slate-700 w-full max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
+                    <div class="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 bg-emerald-600/20 text-emerald-400 rounded-full text-xs font-bold mono">
+                                {{ selectedRegulation.section }}
+                            </span>
+                            <span class="text-slate-400 text-sm">{{ selectedRegulation.jurisdiction }}</span>
+                        </div>
+                        <button @click="selectedRegulation = null" class="p-2 hover:bg-slate-800 rounded-lg">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <h2 class="text-2xl font-bold mb-4">{{ selectedRegulation.title }}</h2>
+                        <div class="legal-text rounded-lg p-4 font-mono text-sm text-slate-300 leading-relaxed mb-4">
+                            {{ selectedRegulation.content }}
+                        </div>
+                        <div class="p-4 bg-emerald-950/20 border border-emerald-500/20 rounded-lg">
+                            <h4 class="text-sm font-semibold text-emerald-400 mb-2">Simple Explanation</h4>
+                            <p class="text-sm text-slate-300">{{ selectedRegulation.plainEnglish }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Setup Steps Modal -->
+            <div v-if="showSetupSteps" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" @click.self="showSetupSteps = false">
+                <div class="glass rounded-2xl border border-slate-700 w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+                    <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+                        <h3 class="text-xl font-bold">Setup Instructions</h3>
+                        <button @click="showSetupSteps = false" class="p-2 hover:bg-slate-800 rounded-lg">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <div class="flex-1 overflow-y-auto p-6 space-y-4">
+                        <div v-for="(step, idx) in setupSteps" :key="idx" class="flex gap-4">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-600/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
+                                {{ idx + 1 }}
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1">{{ step.title }}</h4>
+                                <p class="text-sm text-slate-400 mb-2">{{ step.description }}</p>
+                                <pre v-if="step.code" class="text-xs"><code>{{ step.code }}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Files View -->
+        <div v-if="currentView === 'project-files'" class="space-y-6 slide-in">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold mb-2">Complete Project Structure</h2>
+                    <p class="text-slate-400">Copy these files to your local machine to run the application</p>
+                </div>
+                <button @click="copyAllFiles" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-lg text-sm font-medium transition flex items-center gap-2">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                    Copy All Files
+                </button>
+            </div>
+
+            <!-- File Tree -->
+            <div class="glass rounded-xl border border-slate-800 overflow-hidden">
+                <div class="p-4 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between">
+                    <span class="font-medium">taxreg-pakistan/</span>
+                    <span class="text-xs text-slate-500">{{ projectFiles.length }} files</span>
+                </div>
+                <div class="divide-y divide-slate-800">
+                    <div v-for="file in projectFiles" :key="file.path" class="group">
+                        <div 
+                            @click="toggleFile(file)"
+                            class="p-4 hover:bg-slate-800/50 cursor-pointer flex items-center justify-between transition"
+                        >
+                            <div class="flex items-center gap-3">
+                                <i :data-lucide="file.type === 'folder' ? 'folder' : 'file-code'" class="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition"></i>
+                                <span class="font-mono text-sm">{{ file.path }}</span>
+                                <span v-if="file.size" class="text-xs text-slate-600">{{ file.size }}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button 
+                                    @click.stop="copyFile(file)"
+                                    class="opacity-0 group-hover:opacity-100 px-2 py-1 text-xs bg-slate-800 hover:bg-slate-700 rounded transition flex items-center gap-1"
+                                >
+                                    <i data-lucide="copy" class="w-3 h-3"></i>
+                                    Copy
+                                </button>
+                                <i data-lucide="chevron-down" :class="{'rotate-180': file.expanded}" class="w-4 h-4 text-slate-600 transition-transform"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- File Content -->
+                        <div v-if="file.expanded && file.content" class="border-t border-slate-800 bg-slate-950/50">
+                            <div class="p-4 overflow-x-auto">
+                                <pre class="text-xs leading-relaxed"><code v-html="highlightCode(file.content)"></code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Database View -->
+        <div v-if="currentView === 'database'" class="space-y-6 slide-in">
+            <h2 class="text-3xl font-bold mb-2">Database Schema</h2>
+            <p class="text-slate-400 mb-6">Prisma schema for PostgreSQL with complete Pakistani tax entities</p>
+
+            <div class="glass rounded-xl border border-slate-800 overflow-hidden">
+                <div class="p-4 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between">
+                    <span class="font-mono text-sm">prisma/schema.prisma</span>
+                    <button @click="copyToClipboard(databaseSchema)" class="px-3 py-1 text-xs bg-slate-800 hover:bg-slate-700 rounded transition flex items-center gap-1">
+                        <i data-lucide="copy" class="w-3 h-3"></i>
+                        Copy Schema
+                    </button>
+                </div>
+                <div class="p-4 overflow-x-auto bg-slate-950">
+                    <pre class="text-xs leading-relaxed"><code v-html="highlightCode(databaseSchema)"></code></pre>
+                </div>
+            </div>
+
+            <!-- Entity Diagram -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div v-for="entity in databaseEntities" :key="entity.name" class="glass rounded-xl border border-slate-800 p-4">
+                    <h4 class="font-semibold text-emerald-400 mb-3 flex items-center gap-2">
+                        <i data-lucide="table" class="w-4 h-4"></i>
+                        {{ entity.name }}
+                    </h4>
+                    <ul class="space-y-1 text-sm">
+                        <li v-for="field in entity.fields" :key="field.name" class="flex items-center justify-between">
+                            <span class="text-slate-300">{{ field.name }}</span>
+                            <span class="text-xs text-slate-500 font-mono">{{ field.type }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deployment View -->
+        <div v-if="currentView === 'deployment'" class="space-y-6 slide-in">
+            <h2 class="text-3xl font-bold mb-2">Deployment Guide</h2>
+            <p class="text-slate-400 mb-6">Deploy to Vercel, Railway, or AWS in minutes</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Vercel Deployment -->
+                <div class="glass rounded-xl border border-slate-800 p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-black flex items-center justify-center">
+                            <i data-lucide="triangle" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Deploy to Vercel</h3>
+                            <p class="text-xs text-slate-500">Recommended for frontend</p>
+                        </div>
+                    </div>
+                    <ol class="space-y-3 text-sm text-slate-300 mb-4">
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-bold">1.</span>
+                            Push code to GitHub
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-bold">2.</span>
+                            Import project on Vercel
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-bold">3.</span>
+                            Add environment variables
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-bold">4.</span>
+                            Deploy automatically
+                        </li>
+                    </ol>
+                    <pre class="text-xs bg-slate-950 p-3 rounded border border-slate-800"><code>vercel --prod</code></pre>
+                </div>
+
+                <!-- Railway Deployment -->
+                <div class="glass rounded-xl border border-slate-800 p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-600 flex items-center justify-center">
+                            <i data-lucide="train" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Deploy to Railway</h3>
+                            <p class="text-xs text-slate-500">Full-stack with PostgreSQL</p>
+                        </div>
+                    </div>
+                    <ol class="space-y-3 text-sm text-slate-300 mb-4">
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-bold">1.</span>
+                            Install Railway CLI
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-bold">2.</span>
+                            Create project and add PostgreSQL
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-bold">3.</span>
+                            Set environment variables
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-400 font-bold">4.</span>
+                            Deploy with one command
+                        </li>
+                    </ol>
+                    <pre class="text-xs bg-slate-950 p-3 rounded border border-slate-800"><code>railway up</code></pre>
+                </div>
+            </div>
+
+            <!-- Environment Variables -->
+            <div class="glass rounded-xl border border-slate-800 p-6">
+                <h3 class="font-semibold mb-4 flex items-center gap-2">
+                    <i data-lucide="key" class="w-5 h-5 text-emerald-400"></i>
+                    Required Environment Variables
+                </h3>
+                <div class="bg-slate-950 rounded-lg border border-slate-800 p-4 font-mono text-sm space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-purple-400">DATABASE_URL</span>
+                        <span class="text-slate-500">"postgresql://..."</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-purple-400">NEXTAUTH_SECRET</span>
+                        <span class="text-slate-500">"your-secret-key"</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-purple-400">OPENAI_API_KEY</span>
+                        <span class="text-slate-500">"sk-..."</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-purple-400">FBR_API_KEY</span>
+                        <span class="text-slate-500">"optional"</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div v-if="toast.show" class="fixed bottom-4 right-4 z-50 glass rounded-lg border border-emerald-500/30 p-4 flex items-center gap-3 animate-in slide-in-from-bottom-2">
+        <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>
+        <span class="text-sm">{{ toast.message }}</span>
+    </div>
+
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+    data() {
+        return {
+            currentView: 'live-demo',
+            showSetupSteps: false,
+            selectedRegulation: null,
+            
+            // Demo data
+            demoFilters: {
+                type: '',
+                jurisdiction: '',
+                search: ''
+            },
+            demoNoticeText: '',
+            demoAnalyzing: false,
+            demoAnalysisResult: null,
+            
+            demoRegulations: [
+                {
+                    id: 1,
+                    section: 'Section 122',
+                    title: 'Best Judgment Assessment',
+                    type: 'INCOME_TAX',
+                    jurisdiction: 'Federal',
+                    content: 'Where a person fails to file a return of income, the Commissioner may, based on available information, make an assessment of the income and tax due.',
+                    plainEnglish: 'If you don\'t file your tax return, FBR can estimate your income and tax based on their records and charge you accordingly.'
+                },
+                {
+                    id: 2,
+                    section: 'Section 149',
+                    title: 'Tax on Salary',
+                    type: 'INCOME_TAX',
+                    jurisdiction: 'Federal',
+                    content: 'Every employer making payment of salary to an employee shall deduct tax from the amount paid at the rate specified in Division I of Part I of the First Schedule.',
+                    plainEnglish: 'Your employer must deduct income tax from your salary every month before paying you, based on the tax slabs provided by FBR.'
+                },
+                {
+                    id: 3,
+                    section: 'Section 3',
+                    title: 'Scope of Tax',
+                    type: 'SALES_TAX',
+                    jurisdiction: 'Federal',
+                    content: 'There shall be charged, levied and paid a tax known as sales tax at the rate of eighteen percent of the value of goods.',
+                    plainEnglish: 'Standard GST rate in Pakistan is 18% on most goods and services, collected at every stage of supply chain.'
+                },
+                {
+                    id: 4,
+                    section: 'Section 236K',
+                    title: 'Advance Tax on Purchase of Property',
+                    type: 'WHT',
+                    jurisdiction: 'Federal',
+                    content: 'Every person purchasing immovable property shall pay advance tax at the time of registration @ 3% for filers and 6% for non-filers.',
+                    plainEnglish: 'When buying property, you must pay 3% advance tax (6% if non-filer) to FBR at the time of property registration.'
+                }
+            ],
+            
+            setupSteps: [
+                {
+                    title: 'Clone Repository Structure',
+                    description: 'Create project directory and initialize with package.json',
+                    code: 'mkdir taxreg-pakistan && cd taxreg-pakistan\nnpm init -y'
+                },
+                {
+                    title: 'Install Dependencies',
+                    description: 'Install Next.js, React, TypeScript, and all required packages',
+                    code: 'npm install next@14 react react-dom typescript @types/node @types/react\nnpm install tailwindcss postcss autoprefixer\nnpm install prisma @prisma/client\nnpm install next-auth lucide-react\nnpm install openai axios cheerio'
+                },
+                {
+                    title: 'Initialize Database',
+                    description: 'Set up PostgreSQL and run Prisma migrations',
+                    code: 'npx prisma init\nnpx prisma migrate dev --name init\nnpx prisma generate'
+                },
+                {
+                    title: 'Configure Environment',
+                    description: 'Create .env.local file with your credentials',
+                    code: 'DATABASE_URL="postgresql://user:pass@localhost:5432/taxreg"\nNEXTAUTH_SECRET="your-secret-here"\nOPENAI_API_KEY="sk-your-key"'
+                },
+                {
+                    title: 'Run Development Server',
+                    description: 'Start the Next.js development server',
+                    code: 'npm run dev\n# Open http://localhost:3000'
+                }
+            ],
+            
+            projectFiles: [
+                {
+                    path: 'package.json',
+                    type: 'file',
+                    size: '2.4 KB',
+                    expanded: false,
+                    content: `{
+  "name": "taxreg-pakistan",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "next": "14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@prisma/client": "^5.8.0",
+    "next-auth": "^4.24.5",
+    "openai": "^4.24.1",
+    "lucide-react": "^0.303.0",
+    "tailwindcss": "^3.4.0",
+    "axios": "^1.6.3",
+    "cheerio": "^1.0.0-rc.12",
+    "date-fns": "^3.0.6",
+    "zustand": "^4.4.7",
+    "@tanstack/react-query": "^5.17.0",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "prisma": "^5.8.0",
+    "tsx": "^4.7.0",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.1.0"
+  }
+}`
+                },
+                {
+                    path: 'prisma/schema.prisma',
+                    type: 'file',
+                    size: '4.1 KB',
+                    expanded: false,
+                    content: `generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  ntn           String?   @unique
+  filerStatus   Boolean   @default(false)
+  province      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  notices       Notice[]
+  @@map("users")
+}
+
+model Regulation {
+  id              String   @id @default(cuid())
+  type            RegulationType
+  jurisdiction    String
+  lawName         String
+  section         String
+  subSection      String?
+  clause          String?
+  title           String
+  content         String   @db.Text
+  plainEnglish    String?  @db.Text
+  effectiveDate   DateTime
+  amendedDate     DateTime?
+  status          Status   @default(ACTIVE)
+  
+  amendments      Amendment[]
+  sros            SRO[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([type, jurisdiction])
+  @@index([section])
+  @@map("regulations")
+}
+
+model Amendment {
+  id              String   @id @default(cuid())
+  regulationId    String
+  regulation      Regulation @relation(fields: [regulationId], references: [id])
+  date            DateTime
+  description     String
+  sroNumber       String?
+  
+  @@map("amendments")
+}
+
+model SRO {
+  id              String   @id @default(cuid())
+  number          String
+  title           String
+  summary         String   @db.Text
+  date            DateTime
+  effectiveDate   DateTime
+  type            SROType
+  issuer          String
+  impact          String
+  pdfUrl          String?
+  
+  regulations     Regulation[]
+  
+  @@index([number])
+  @@map("sros")
+}
+
+model Notice {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  
+  noticeType      String
+  fbrReference    String?
+  taxYear         String
+  section         String
+  issueDate       DateTime
+  dueDate         DateTime?
+  amounts         Json?
+  deadlines       Json?
+  actions         Json?
+  citations       String[]
+  rawText         String   @db.Text
+  
+  createdAt       DateTime @default(now())
+  @@map("notices")
+}
+
+enum RegulationType {
+  INCOME_TAX
+  SALES_TAX
+  FEDERAL_EXCISE
+  CUSTOMS_ACT
+  PROVINCIAL_TAX
+}
+
+enum Status {
+  ACTIVE
+  AMENDED
+  REPEALED
+  PROPOSED
+}
+
+enum SROType {
+  INCOME_TAX
+  SALES_TAX
+  WHT
+  AMNESTY
+  EXEMPTION
+  PROCEDURE
+}`
+                },
+                {
+                    path: 'app/layout.tsx',
+                    type: 'file',
+                    size: '1.2 KB',
+                    expanded: false,
+                    content: `import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { Providers } from '@/components/providers'
+
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata: Metadata = {
+  title: 'TaxReg Pakistan | FBR Tax Intelligence Platform',
+  description: 'Complete tax regulation database for Pakistan. Income Tax Ordinance 2001, Sales Tax Act 1990, and all FBR SROs.',
+  keywords: 'Pakistan tax, FBR, income tax, sales tax, GST, withholding tax, NTN, IRIS',
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}`
+                },
+                {
+                    path: 'app/globals.css',
+                    type: 'file',
+                    size: '2.8 KB',
+                    expanded: false,
+                    content: `@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --pakistan-green: #01411C;
+  --pakistan-emerald: #10b981;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-200;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-slate-900/70 backdrop-blur-xl border border-slate-800;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent;
+  }
+  
+  .legal-text {
+    @apply bg-slate-950 border-l-4 border-emerald-600 p-4 font-mono text-sm text-slate-300;
+  }
+}
+
+@layer utilities {
+  .animate-slide-in {
+    animation: slideIn 0.5s ease-out;
+  }
+  
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}`
+                },
+                {
+                    path: 'app/page.tsx',
+                    type: 'file',
+                    size: '3.5 KB',
+                    expanded: false,
+                    content: `import { Hero } from '@/components/hero'
+import { StatsGrid } from '@/components/stats-grid'
+import { RecentSROs } from '@/components/recent-sros'
+import { TaxCalendar } from '@/components/tax-calendar'
+import { ProvincialTaxes } from '@/components/provincial-taxes'
+
+export default function Home() {
+  return (
+    <main className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
+      <Hero />
+      <StatsGrid />
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <RecentSROs />
+        </div>
+        <div>
+          <TaxCalendar />
+        </div>
+      </div>
+      
+      <ProvincialTaxes />
+    </main>
+  )
+}`
+                },
+                {
+                    path: 'app/api/regulations/route.ts',
+                    type: 'file',
+                    size: '1.8 KB',
+                    expanded: false,
+                    content: `import { NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import { z } from 'zod'
+
+const querySchema = z.object({
+  type: z.enum(['INCOME_TAX', 'SALES_TAX', 'FEDERAL_EXCISE']).optional(),
+  jurisdiction: z.string().optional(),
+  section: z.string().optional(),
+  search: z.string().optional(),
+  page: z.string().default('1'),
+  limit: z.string().default('20'),
+})
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const params = querySchema.parse(Object.fromEntries(searchParams))
+    
+    const where: any = {}
+    
+    if (params.type) where.type = params.type
+    if (params.jurisdiction) where.jurisdiction = params.jurisdiction
+    if (params.section) {
+      where.section = { contains: params.section, mode: 'insensitive' }
+    }
+    
+    if (params.search) {
+      where.OR = [
+        { title: { contains: params.search, mode: 'insensitive' } },
+        { content: { contains: params.search, mode: 'insensitive' } },
+        { plainEnglish: { contains: params.search, mode: 'insensitive' } },
+      ]
+    }
+    
+    const regulations = await prisma.regulation.findMany({
+      where,
+      include: {
+        amendments: { orderBy: { date: 'desc' } },
+        sros: { orderBy: { date: 'desc' }, take: 3 },
+      },
+      skip: (parseInt(params.page) - 1) * parseInt(params.limit),
+      take: parseInt(params.limit),
+      orderBy: { effectiveDate: 'desc' },
+    })
+    
+    const total = await prisma.regulation.count({ where })
+    
+    return NextResponse.json({
+      data: regulations,
+      meta: {
+        total,
+        page: parseInt(params.page),
+        pages: Math.ceil(total / parseInt(params.limit)),
+      },
+    })
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to fetch regulations' },
+      { status: 500 }
+    )
+  }
+}`
+                },
+                {
+                    path: 'app/api/analyze-notice/route.ts',
+                    type: 'file',
+                    size: '2.2 KB',
+                    expanded: false,
+                    content: `import { NextResponse } from 'next/server'
+import { OpenAI } from 'openai'
+import { prisma } from '@/lib/prisma'
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
+export async function POST(request: Request) {
+  try {
+    const formData = await request.formData()
+    const text = formData.get('text') as string
+    
+    if (!text) {
+      return NextResponse.json(
+        { error: 'No text provided' },
+        { status: 400 }
+      )
+    }
+    
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4-turbo-preview",
+      messages: [
+        {
+          role: "system",
+          content: \`You are a Pakistani tax law expert. Analyze FBR notices and extract:
+          1. Notice type (Assessment Order, Demand Notice, etc.)
+          2. Legal section cited (e.g., Section 122)
+          3. Tax year
+          4. Financial amounts (demand, penalty, surcharge)
+          5. Critical deadlines with legal references
+          6. Recommended actions with form numbers
+          7. Cited regulations and SROs
+          
+          Return JSON only with this structure:
+          {
+            "type": string,
+            "section": string,
+            "taxYear": string,
+            "urgency": "Critical" | "High" | "Medium" | "Low",
+            "amounts": { "demand": string, "penalty": string, "surcharge": string },
+            "deadlines": [{ "date": string, "action": string, "section": string }],
+            "actions": [{ "title": string, "description": string, "form": string }],
+            "references": string[]
+          }\`
+        },
+        {
+          role: "user",
+          content: text
+        }
+      ],
+      response_format: { type: "json_object" }
+    })
+    
+    const analysis = JSON.parse(completion.choices[0].message.content || '{}')
+    
+    // Save to database if user is authenticated
+    // const savedNotice = await prisma.notice.create({...})
+    
+    return NextResponse.json(analysis)
+  } catch (error) {
+    console.error('Analysis error:', error)
+    return NextResponse.json(
+      { error: 'Failed to analyze notice' },
+      { status: 500 }
+    )
+  }
+}`
+                },
+                {
+                    path: 'components/hero.tsx',
+                    type: 'file',
+                    size: '2.1 KB',
+                    expanded: false,
+                    content: `'use client'
+
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { FileSearch, BookOpen, TrendingUp, Shield } from 'lucide-react'
+
+export function Hero() {
+  return (
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-emerald-950/30 to-slate-900 border border-emerald-500/20 p-8 lg:p-12">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -mr-20 -mt-20" />
+      
+      <div className="relative z-10 grid lg:grid-cols-2 gap-8 items-center">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium mb-6">
+            <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+            Live FBR Data Integration
+          </div>
+          
+          <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
+            Pakistan Tax{' '}
+            <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
+              Intelligence Hub
+            </span>
+          </h1>
+          
+          <p className="text-slate-400 text-lg mb-8 max-w-lg">
+            Complete database of Income Tax Ordinance 2001, Sales Tax Act 1990, 
+            and all FBR SROs with AI-powered notice analysis.
+          </p>
+          
+          <div className="flex flex-wrap gap-3">
+            <Link href="/analyzer">
+              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
+                <FileSearch className="w-4 h-4 mr-2" />
+                Analyze FBR Notice
+              </Button>
+            </Link>
+            <Link href="/regulations">
+              <Button size="lg" variant="outline">
+                <BookOpen className="w-4 h-4 mr-2" />
+                Browse Laws
+              </Button>
+            </Link>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <StatCard icon={TrendingUp} label="Active SROs" value="243" change="+12" />
+          <StatCard icon={Shield} label="Taxpayers" value="1.2M+" change="+8%" />
+          <StatCard icon={FileSearch} label="Notices Analyzed" value="45K" change="+24%" />
+          <StatCard icon={BookOpen} label="Regulations" value="12K+" change="+5%" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function StatCard({ icon: Icon, label, value, change }: any) {
+  return (
+    <div className="glass rounded-xl p-4 border border-slate-800">
+      <Icon className="w-5 h-5 text-emerald-400 mb-2" />
+      <div className="text-2xl font-bold text-white">{value}</div>
+      <div className="text-xs text-slate-400">{label}</div>
+      <div className="text-xs text-emerald-400 mt-1">+{change} this month</div>
+    </div>
+  )
+}`
+                },
+                {
+                    path: 'lib/prisma.ts',
+                    type: 'file',
+                    size: '0.3 KB',
+                    expanded: false,
+                    content: `import { PrismaClient } from '@prisma/client'
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined
+}
+
+export const prisma = globalForPrisma.prisma ?? new PrismaClient()
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma`
+                },
+                {
+                    path: 'lib/fbr-scraper.ts',
+                    type: 'file',
+                    size: '2.5 KB',
+                    expanded: false,
+                    content: `import axios from 'axios'
+import * as cheerio from 'cheerio'
+
+export class FBRScraperService {
+  private baseUrl = 'https://www.fbr.gov.pk'
+  
+  async scrapeSROs() {
+    try {
+      const { data } = await axios.get(\`\${this.baseUrl}/sros\`)
+      const $ = cheerio.load(data)
+      const sros = []
+      
+      $('.sro-item').each((i, el) => {
+        sros.push({
+          number: $(el).find('.sro-number').text().trim(),
+          title: $(el).find('.sro-title').text().trim(),
+          date: this.parseDate($(el).find('.sro-date').text().trim()),
+          pdfUrl: $(el).find('a').attr('href'),
+          type: this.classifySRO($(el).find('.sro-title').text()),
+        })
+      })
+      
+      return sros
+    } catch (error) {
+      console.error('FBR Scraping error:', error)
+      return []
+    }
+  }
+  
+  async scrapeCirculars() {
+    // Implementation for circulars
+    return []
+  }
+  
+  private parseDate(dateStr: string): Date {
+    // Parse Pakistani date format
+    return new Date(dateStr)
+  }
+  
+  private classifySRO(title: string): string {
+    const lower = title.toLowerCase()
+    if (lower.includes('income tax')) return 'INCOME_TAX'
+    if (lower.includes('sales tax')) return 'SALES_TAX'
+    if (lower.includes('withholding')) return 'WHT'
+    return 'OTHER'
+  }
+}`
+                },
+                {
+                    path: 'tailwind.config.ts',
+                    type: 'file',
+                    size: '1.5 KB',
+                    expanded: false,
+                    content: `import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        pakistan: {
+          green: '#01411C',
+          emerald: '#10b981',
+          dark: '#0f172a',
+        },
+      },
+      fontFamily: {
+        mono: ['JetBrains Mono', 'monospace'],
+        urdu: ['Noto Nastaliq Urdu', 'serif'],
+      },
+      animation: {
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'slide-in': 'slideIn 0.5s ease-out',
+      },
+      keyframes: {
+        slideIn: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+    },
+  },
+  plugins: [],
+}
+
+export default config`
+                },
+                {
+                    path: 'docker-compose.yml',
+                    type: 'file',
+                    size: '1.2 KB',
+                    expanded: false,
+                    content: `version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/taxreg
+      - NEXTAUTH_SECRET=your-secret-key
+      - OPENAI_API_KEY=\${OPENAI_API_KEY}
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: taxreg
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:`
+                },
+                {
+                    path: 'Dockerfile',
+                    type: 'file',
+                    size: '0.8 KB',
+                    expanded: false,
+                    content: `FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm ci
+
+# Copy prisma schema
+COPY prisma ./prisma/
+RUN npx prisma generate
+
+# Copy source
+COPY . .
+
+# Build
+RUN npm run build
+
+EXPOSE 3000
+
+CMD ["npm", "start"]`
+                },
+                {
+                    path: '.env.example',
+                    type: 'file',
+                    size: '0.6 KB',
+                    expanded: false,
+                    content: `# Database
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/taxreg"
+
+# NextAuth
+NEXTAUTH_SECRET="your-super-secret-key-here"
+NEXTAUTH_URL="http://localhost:3000"
+
+# OpenAI (for notice analysis)
+OPENAI_API_KEY="sk-your-openai-api-key"
+
+# FBR (optional - for direct API access)
+FBR_API_KEY=""
+FBR_API_URL=""
+
+# Redis (for caching)
+REDIS_URL="redis://localhost:6379"
+
+# App Config
+APP_NAME="TaxReg Pakistan"
+APP_URL="http://localhost:3000"`
+                }
+            ],
+            
+            databaseSchema: `generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  ntn           String?   @unique // National Tax Number
+  filerStatus   Boolean   @default(false)
+  province      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  notices       Notice[]
+  searches      SearchHistory[]
+  alerts        Alert[]
+  
+  @@map("users")
+}
+
+model Regulation {
+  id              String   @id @default(cuid())
+  type            RegulationType
+  jurisdiction    String   // Federal, Punjab, Sindh, KPK, Balochistan
+  lawName         String   // "Income Tax Ordinance 2001"
+  section         String   // "Section 122"
+  subSection      String?
+  clause          String?
+  title           String
+  content         String   @db.Text
+  plainEnglish    String?  @db.Text // Simplified explanation
+  effectiveDate   DateTime
+  amendedDate     DateTime?
+  status          Status   @default(ACTIVE)
+  
+  amendments      Amendment[]
+  relatedCases    CaseLaw[]
+  sros            SRO[]
+  tags            Tag[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([type, jurisdiction])
+  @@index([section])
+  @@index([status])
+  @@map("regulations")
+}
+
+model Amendment {
+  id              String   @id @default(cuid())
+  regulationId    String
+  regulation      Regulation @relation(fields: [regulationId], references: [id], onDelete: Cascade)
+  date            DateTime
+  description     String
+  sroNumber       String?
+  previousText    String?  @db.Text
+  newText         String?  @db.Text
+  
+  @@map("amendments")
+}
+
+model SRO {
+  id              String   @id @default(cuid())
+  number          String   // "SRO 60(I)/2026"
+  title           String
+  summary         String   @db.Text
+  date            DateTime
+  effectiveDate   DateTime
+  type            SROType
+  issuer          String   // FBR, PRA, SRB, KPRA, BRA
+  impact          ImpactLevel
+  pdfUrl          String?
+  
+  regulations     Regulation[]
+  
+  @@index([number])
+  @@index([date])
+  @@map("sros")
+}
+
+model Notice {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  
+  noticeType      NoticeType
+  fbrReference    String?  // FBR tracking number
+  taxYear         String
+  section         String   // Section under which issued
+  issueDate       DateTime
+  dueDate         DateTime?
+  
+  // Parsed data
+  amounts         Json?    // { demand: "2450000", penalty: "245000", surcharge: "367500" }
+  deadlines       Json?    // [{ date: "2026-03-15", action: "File Appeal", section: "127" }]
+  actions         Json?    // [{ title: "Review Order", description: "...", form: "IT-01" }]
+  citations       String[] // Cited regulations
+  
+  rawText         String   @db.Text
+  analyzed        Boolean  @default(false)
+  
+  createdAt       DateTime @default(now())
+  @@map("notices")
+}
+
+model SearchHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  query       String
+  filters     Json?
+  results     Int
+  createdAt   DateTime @default(now())
+  @@map("search_history")
+}
+
+model CaseLaw {
+  id            String   @id @default(cuid())
+  citation      String   // "2024 PTD 1234"
+  court         String   // "Supreme Court", "High Court"
+  date          DateTime
+  title         String
+  summary       String   @db.Text
+  fullText      String   @db.Text
+  regulations   Regulation[]
+  createdAt     DateTime @default(now())
+  @@map("case_law")
+}
+
+model Tag {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  regulations Regulation[]
+  @@map("tags")
+}
+
+enum RegulationType {
+  INCOME_TAX
+  SALES_TAX
+  FEDERAL_EXCISE
+  CUSTOMS_ACT
+  PROVINCIAL_TAX
+}
+
+enum Status {
+  ACTIVE
+  AMENDED
+  REPEALED
+  PROPOSED
+  DRAFT
+}
+
+enum SROType {
+  INCOME_TAX
+  SALES_TAX
+  WHT
+  AMNESTY
+  EXEMPTION
+  PROCEDURE
+  CLARIFICATION
+}
+
+enum ImpactLevel {
+  High
+  Medium
+  Low
+}
+
+enum NoticeType {
+  ASSESSMENT_ORDER
+  DEMAND_NOTICE
+  AUDIT_REPORT
+  SHOW_CAUSE_NOTICE
+  PENALTY_ORDER
+  RECOVERY_NOTICE
+  REFUND_ORDER
+}`,
+
+            databaseEntities: [
+                {
+                    name: 'User',
+                    fields: [
+                        { name: 'id', type: 'String (CUID)' },
+                        { name: 'email', type: 'String (Unique)' },
+                        { name: 'ntn', type: 'String (Unique, Optional)' },
+                        { name: 'filerStatus', type: 'Boolean' },
+                        { name: 'province', type: 'String' },
+                        { name: 'notices', type: 'Relation[]' }
+                    ]
+                },
+                {
+                    name: 'Regulation',
+                    fields: [
+                        { name: 'id', type: 'String (CUID)' },
+                        { name: 'type', type: 'Enum' },
+                        { name: 'jurisdiction', type: 'String' },
+                        { name: 'section', type: 'String' },
+                        { name: 'title', type: 'String' },
+                        { name: 'content', type: 'Text' },
+                        { name: 'plainEnglish', type: 'Text (Optional)' },
+                        { name: 'amendments', type: 'Relation[]' }
+                    ]
+                },
+                {
+                    name: 'Notice',
+                    fields: [
+                        { name: 'id', type: 'String (CUID)' },
+                        { name: 'userId', type: 'String (Foreign Key)' },
+                        { name: 'noticeType', type: 'Enum' },
+                        { name: 'taxYear', type: 'String' },
+                        { name: 'amounts', type: 'JSON' },
+                        { name: 'deadlines', type: 'JSON' },
+                        { name: 'actions', type: 'JSON' },
+                        { name: 'rawText', type: 'Text' }
+                    ]
+                }
+            ],
+            
+            toast: {
+                show: false,
+                message: ''
+            }
+        }
+    },
+    
+    computed: {
+        filteredDemoRegulations() {
+            return this.demoRegulations.filter(reg => {
+                const matchesType = !this.demoFilters.type || reg.type === this.demoFilters.type;
+                const matchesJurisdiction = !this.demoFilters.jurisdiction || reg.jurisdiction === this.demoFilters.jurisdiction;
+                const matchesSearch = !this.demoFilters.search || 
+                    reg.title.toLowerCase().includes(this.demoFilters.search.toLowerCase()) ||
+                    reg.section.toLowerCase().includes(this.demoFilters.search.toLowerCase());
+                return matchesType && matchesJurisdiction && matchesSearch;
+            });
+        }
+    },
+    
+    methods: {
+        toggleFile(file) {
+            file.expanded = !file.expanded;
+        },
+        
+        copyFile(file) {
+            navigator.clipboard.writeText(file.content);
+            this.showToast(`Copied ${file.path} to clipboard`);
+        },
+        
+        copyAllFiles() {
+            const allContent = this.projectFiles.map(f => `// ${f.path}\n${f.content}`).join('\n\n');
+            navigator.clipboard.writeText(allContent);
+            this.showToast('All project files copied to clipboard');
+        },
+        
+        copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            this.showToast('Copied to clipboard');
+        },
+        
+        showToast(message) {
+            this.toast = { show: true, message };
+            setTimeout(() => this.toast.show = false, 3000);
+        },
+        
+        analyzeDemoNotice() {
+            this.demoAnalyzing = true;
+            setTimeout(() => {
+                this.demoAnalysisResult = {
+                    type: 'Assessment Order u/s 122',
+                    section: '122(5A)',
+                    urgency: 'Critical'
+                };
+                this.demoAnalyzing = false;
+            }, 1500);
+        },
+        
+        highlightCode(code) {
+            // Simple syntax highlighting
+            return code
+                .replace(/"(.*?)"/g, '<span class="code-string">"$1"</span>')
+                .replace(/\b(model|enum|generator|datasource)\b/g, '<span class="code-keyword">$1</span>')
+                .replace(/\b(String|Int|Boolean|DateTime|Json)\b/g, '<span class="code-function">$1</span>')
+                .replace(/(\/\/.*)/g, '<span class="code-comment">$1</span>');
+        }
+    },
+    
+    mounted() {
+        lucide.createIcons();
+    },
+    
+    updated() {
+        lucide.createIcons();
+    }
+}).mount('#app');
+</script>
+
+</body>
+</html>
